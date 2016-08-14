@@ -37,7 +37,7 @@ def building(bldng):
     )
     return render_template(
         'building.html',
-        building=bldng,
+        building=bldng.title(),
         voterData=json.dumps(voterData),
         volunteerData=json.dumps(volunteerData)
     )
