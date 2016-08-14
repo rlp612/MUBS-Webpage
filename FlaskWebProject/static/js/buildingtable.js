@@ -6,6 +6,9 @@ function draw_building_table(tabId, buildingData) {
     $(document).ready(function() {
         var buildingtable = $(tabId).DataTable({
             'data': buildingData,
+            'buttons': [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
             'columns': [
                 {
                     'title': 'Building',
@@ -24,6 +27,9 @@ function draw_building_table(tabId, buildingData) {
             'order': [1, 'desc'],
             'pageLength': 50
         });
+
+        buildingtable.buttons().container()
+            .appendTo( '#scoretable_wrapper .col-sm-6:eq(0)' );
     });
 }
 
