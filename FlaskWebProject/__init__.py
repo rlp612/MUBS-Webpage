@@ -27,7 +27,7 @@ def building(bldng):
     bldng = requests.utils.unquote(bldng)
 
     # we may have just passed the buidling name in as a query param
-    bname = requests.utils.unquote(request.args.get('bname'))
+    bname = requests.utils.unquote(request.args.get('bname', ''))
     if bname:
         title = '{} ({})'.format(bldng.title(), bname.title())
     else:
