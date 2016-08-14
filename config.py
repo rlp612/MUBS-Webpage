@@ -10,7 +10,7 @@ F_DBCRED = os.path.expanduser(
     )
 )
 
-Q_ADDR = """SELECT address, unitcount
+Q_ADDR = """SELECT address, unitcount, neighborhood
 FROM ACDCMUBS2016.MUBS_Query
 WHERE UnitCount > 10;"""
 SP_VOL = "get_volunteers"

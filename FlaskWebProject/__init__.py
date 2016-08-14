@@ -55,6 +55,7 @@ def get_buildings(fdbcred, addressQry, withurls=False):
     addr = sorted(addr, key=lambda row: -row['unitcount'])
     for row in addr:
         row['address'] = row['address'].strip().lower()
+        row['neighborhood'] = (row['neighborhood'] or '').strip().lower().title()
         if withurls:
             row['url'] = url_for('building', bldng=row['address'])
     return addr

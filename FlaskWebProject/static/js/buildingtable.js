@@ -23,6 +23,10 @@ function draw_building_table(tabId, buildingData) {
                     'title': 'Unit Count',
                     'data': 'unitcount'
                 },
+                {
+                    'title': 'Neighborhood',
+                    'data': 'neighborhood'
+                }
             ],
             'order': [1, 'desc'],
             'pageLength': 50
