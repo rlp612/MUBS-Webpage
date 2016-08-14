@@ -2,7 +2,7 @@ var TODAY = new Date();
 var YYYYMMDD = TODAY.toISOString().substring(0, 10);
 
 function building_url(data, type, row, meta) {
-    return "<a href='" + row.url + "'" + data + "') }}'>" + data + "</a>";
+    return "<a href='" + row.url + "'>" + data + "</a>";
 }
 
 function draw_building_table(tabId, buildingData) {
