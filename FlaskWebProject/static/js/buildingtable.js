@@ -37,6 +37,9 @@ function draw_voter_table(tabId, voterData) {
     $(document).ready(function() {
         var votertable = $(tabId).DataTable({
             'data': voterData,
+            'buttons': [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
             'columns': [
                 { 'title': 'Name', 'data': 'Name' },
                 { 'title': 'Address', 'data': 'Address' },
@@ -56,6 +59,9 @@ function draw_volunteer_table(tabId, volunteerData) {
     $(document).ready(function() {
         var volunteertable = $(tabId).DataTable({
             'data': volunteerData,
+            'buttons': [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
             'columns': [
                 { 'title': 'Name', 'data': 'Name' },
                 { 'title': 'Address', 'data': 'Address' },
