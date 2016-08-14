@@ -1,0 +1,12 @@
+body {
+    padding-top: 50px;
+}
+
+/* jumbotron */
+a.navbar-brand, a.navbar-brand.active {
+    color: rgb(130, 220, 247);
+}
+
+.jumbotron {
+    background-color: rgba(130, 220, 247, 0.6);
+};

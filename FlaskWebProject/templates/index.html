@@ -1,0 +1,23 @@
+{# _myapp/templates/index.html_ #}
+
+{% extends "layout.html" %}
+{% block title %}VAN Canvass{% endblock %}
+{% block content %}
+{{ super() }}
+<div class="jumbotron">
+    <div class="container">
+        <h1>VAN Canvass</h1>
+    </div>
+</div>
+<div class="container">
+    <table id="scoretable"
+           class="table table-striped table-bordered"
+           cellspacing="0"
+           width="100%"></table>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/buildingtable.js') }}"></script>
+    <script type="text/javascript">
+     draw_building_table("#scoretable", {{ buildingData | safe }});
+    </script>
+</div>
+{% endblock %}

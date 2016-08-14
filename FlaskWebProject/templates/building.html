@@ -1,0 +1,46 @@
+{# _myapp/templates/building.html_ #}
+
+{% extends "layout.html" %}
+{% block title %}VAN Canvass{% endblock %}
+{% block content %}
+{{ super() }}
+<div class="jumbotron">
+    <div class="container">
+        <h1>VAN Canvass</h1>
+    </div>
+</div>
+<div class="container">
+    <h2>{{ building }}</h2>
+    <div id="tableTabs" class="container">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#1" data-toggle="tab">Voters</a>
+            </li>
+            <li>
+                <a href="#2" data-toggle="tab">Volunteers</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="1">
+                <table id="votertable"
+                       class="table table-striped table-bordered"
+                       cellspacing="0"
+                       width="100%"></table>
+            </div>
+            <div class="tab-pane" id="2">
+                <table id="volunteertable"
+                       class="table table-striped table-bordered"
+                       cellspacing="0"
+                       width="100%"></table>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/buildingtable.js') }}"></script>
+    <script type="text/javascript">
+     toggle_button_init("#tabletoggle", "#votertable", "#volunteertable");
+     draw_voter_table("#votertable", {{ voterData | safe }});
+     draw_volunteer_table("#volunteertable", {{ volunteerData | safe }});
+    </script>
+</div>
+{% endblock %}
