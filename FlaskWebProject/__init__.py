@@ -1,6 +1,7 @@
 import json
 
 import mysql.connector
+import requests
 import yaml
 
 from flask import Flask, render_template, url_for
@@ -23,6 +24,7 @@ def index():
 
 @app.route('/building/<bldng>')
 def building(bldng):
+    bldng = requests.utils.unquote(bldng)
     voterData = stored_procedure(
         fdbcred=app.config['F_DBCRED'],
         sp=app.config['SP_VOT'],
