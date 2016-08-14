@@ -1,10 +1,3 @@
-function toggle_button_init(toggleId, voterId, volunteerId) {
-    var flip = 0;
-    $(toggleId).click(function() {
-        $(voterId).toggle( flip++ % 2 === 0 );
-    });
-}
-
 function building_url(data, type, row, meta) {
     return "<a href='" + row.url + "'" + data + "') }}'>" + data + "</a>";
 }

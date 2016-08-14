@@ -38,7 +38,6 @@
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/buildingtable.js') }}"></script>
     <script type="text/javascript">
-     toggle_button_init("#tabletoggle", "#votertable", "#volunteertable");
      draw_voter_table("#votertable", {{ voterData | safe }});
      draw_volunteer_table("#volunteertable", {{ volunteerData | safe }});
     </script>
