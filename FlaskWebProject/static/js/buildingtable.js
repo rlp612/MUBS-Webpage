@@ -1,3 +1,6 @@
+var TODAY = new Date();
+var YYYYMMDD = TODAY.toISOString().substring(0, 10);
+
 function building_url(data, type, row, meta) {
     return "<a href='" + row.url + "'" + data + "') }}'>" + data + "</a>";
 }
@@ -7,7 +10,11 @@ function draw_building_table(tabId, buildingData) {
         var buildingtable = $(tabId).DataTable({
             'data': buildingData,
             'buttons': [
-                'copy', 'csv', 'excel', 'pdf', 'print'
+                'copy',
+                { 'extend': 'csv', filename: 'mubs buildings ' + YYYYMMDD },
+                { 'extend': 'excel', filename: 'mubs buildings ' + YYYYMMDD },
+                { 'extend': 'pdf', filename: 'mubs buildings ' + YYYYMMDD },
+                'print'
             ],
             'columns': [
                 {
@@ -33,12 +40,16 @@ function draw_building_table(tabId, buildingData) {
     });
 }
 
-function draw_voter_table(tabId, voterData) {
+function draw_voter_table(tabId, voterData, building) {
     $(document).ready(function() {
         var votertable = $(tabId).DataTable({
             'data': voterData,
             'buttons': [
-                'copy', 'csv', 'excel', 'pdf', 'print'
+                'copy',
+                { 'extend': 'csv', filename: 'mubs voters ' + building + ' ' + YYYYMMDD },
+                { 'extend': 'excel', filename: 'mubs voters ' + building + ' ' + YYYYMMDD },
+                { 'extend': 'pdf', filename: 'mubs voters ' + building + ' ' + YYYYMMDD },
+                'print'
             ],
             'columns': [
                 { 'title': 'Name', 'data': 'Name' },
@@ -58,12 +69,16 @@ function draw_voter_table(tabId, voterData) {
     });
 }
 
-function draw_volunteer_table(tabId, volunteerData) {
+function draw_volunteer_table(tabId, volunteerData, building) {
     $(document).ready(function() {
         var volunteertable = $(tabId).DataTable({
             'data': volunteerData,
             'buttons': [
-                'copy', 'csv', 'excel', 'pdf', 'print'
+                'copy',
+                { 'extend': 'csv', filename: 'mubs volunteers ' + building + ' ' + YYYYMMDD },
+                { 'extend': 'excel', filename: 'mubs volunteers ' + building + ' ' + YYYYMMDD },
+                { 'extend': 'pdf', filename: 'mubs volunteers ' + building + ' ' + YYYYMMDD },
+                'print'
             ],
             'columns': [
                 { 'title': 'Name', 'data': 'Name' },

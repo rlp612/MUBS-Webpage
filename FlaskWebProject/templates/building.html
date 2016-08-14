@@ -38,8 +38,8 @@
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/buildingtable.js') }}"></script>
     <script type="text/javascript">
-     draw_voter_table("#votertable", {{ voterData | safe }});
-     draw_volunteer_table("#volunteertable", {{ volunteerData | safe }});
+     draw_voter_table("#votertable", {{ voterData | safe }}, "{{ building }}");
+     draw_volunteer_table("#volunteertable", {{ volunteerData | safe }}, "{{ building }}");
     </script>
 </div>
 {% endblock %}
