@@ -29,7 +29,7 @@ function draw_building_table(tabId, buildingData) {
         });
 
         buildingtable.buttons().container()
-            .appendTo( '#scoretable_wrapper .col-sm-6:eq(0)' );
+            .appendTo( tabId + '_wrapper .col-sm-6:eq(0)' );
     });
 }
 
@@ -52,6 +52,9 @@ function draw_voter_table(tabId, voterData) {
             'order': [1, 'asc'],
             'pageLength': 50
         });
+
+        votertable.buttons().container()
+            .appendTo( tabId + '_wrapper .col-sm-6:eq(0)' );
     });
 }
 
@@ -73,5 +76,8 @@ function draw_volunteer_table(tabId, volunteerData) {
             'order': [1, 'asc'],
             'pageLength': 50
         });
+
+        volunteertable.buttons().container()
+            .appendTo( tabId + '_wrapper .col-sm-6:eq(0)' );
     });
 }
