@@ -11,7 +11,7 @@ function draw_building_table(tabId, buildingData) {
             ],
             'columns': [
                 {
-                    'title': 'Building',
+                    'title': 'Address',
                     'data': 'address',
                     'render': building_url
                 },
@@ -20,7 +20,7 @@ function draw_building_table(tabId, buildingData) {
                     'data': 'unitcount'
                 },
                 {
-                    'title': 'Neighborhood',
+                    'title': 'Building',
                     'data': 'neighborhood'
                 }
             ],
