@@ -17,6 +17,7 @@ Q_ADDR = """SELECT
     , doors.doorcount
     , voters.votercount
     , volunteers.volcount
+    , precinct.precinct
 FROM
     ACDCMUBS2016.MUBS_Query lft
     LEFT JOIN ACDCMUBS2016.VAN_Door_Count doors
@@ -25,6 +26,8 @@ FROM
         ON (LOWER(TRIM(lft.address)) = voters.apt_address)
     LEFT JOIN ACDCMUBS2016.VAN_Volunteer_Count volunteers
         ON (LOWER(TRIM(lft.address)) = volunteers.apt_address)
+    LEFT JOIN ACDCMUBS2016.Precinct_Lookup precinct
+        ON (LOWER(TRIM(lft.address)) = LOWER(TRIM(TRAILING "\r" FROM TRIM(precinct.address))))
 ;"""
 SP_VOL = "get_volunteers"
 SP_VOT = "get_voters"

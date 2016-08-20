@@ -22,28 +22,14 @@ function draw_building_table(tabId, buildingData) {
                     'data': 'address',
                     'render': building_url
                 },
-                {
-                    'title': 'Building',
-                    'data': 'neighborhood'
-                },
-                {
-                    'title': 'Unit Count',
-                    'data': 'unitcount'
-                },
-                {
-                    'title': 'Door Count',
-                    'data': 'doorcount'
-                },
-                {
-                    'title': 'Voter Count',
-                    'data': 'votercount'
-                },
-                {
-                    'title': 'Volunteer Count',
-                    'data': 'volcount'
-                }
+                { 'title': 'Building', 'data': 'neighborhood' },
+                { 'title': 'Precinct', 'data': 'precinct' },
+                { 'title': 'Unit Count', 'data': 'unitcount' },
+                { 'title': 'Door Count', 'data': 'doorcount' },
+                { 'title': 'Voter Count', 'data': 'votercount' },
+                { 'title': 'Volunteer Count', 'data': 'volcount' }
             ],
-            'order': [2, 'desc'],
+            'order': [3, 'desc'],
             'pageLength': 50
         });
 
