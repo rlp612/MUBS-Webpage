@@ -28,3 +28,4 @@ FROM
 ;"""
 SP_VOL = "get_volunteers"
 SP_VOT = "get_voters"
+Q_AMBA = """SELECT * FROM MUB_Ambassadors WHERE address = %(building)s;"""

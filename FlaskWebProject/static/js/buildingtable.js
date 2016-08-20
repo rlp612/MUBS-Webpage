@@ -108,3 +108,29 @@ function draw_volunteer_table(tabId, volunteerData, building) {
             .appendTo( tabId + '_wrapper .col-sm-6:eq(0)' );
     });
 }
+
+function draw_ambassador_table(tabId, ambassadorData, building) {
+    $(document).ready(function() {
+        var ambassadortable = $(tabId).DataTable({
+            'data': ambassadorData,
+            'buttons': [
+                'copy',
+                { 'extend': 'csv', filename: 'mubs ambassadors ' + building + ' ' + YYYYMMDD },
+                { 'extend': 'excel', filename: 'mubs ambassadors ' + building + ' ' + YYYYMMDD },
+                { 'extend': 'pdf', filename: 'mubs ambassadors ' + building + ' ' + YYYYMMDD },
+                'print'
+            ],
+            'columns': [
+                { 'title': 'Name', 'data': 'Ambassador_Name' },
+                { 'title': 'Apartment', 'data': 'Amb_Apartment' },
+                { 'title': 'Phone', 'data': 'Phone' },
+                { 'title': 'Email', 'data': 'Email' },
+            ],
+            'order': [1, 'asc'],
+            'pageLength': 50
+        });
+
+        ambassadortable.buttons().container()
+            .appendTo( tabId + '_wrapper .col-sm-6:eq(0)' );
+    });
+}

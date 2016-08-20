@@ -19,6 +19,9 @@
             <li>
                 <a href="#volunteertab" data-toggle="tab">Volunteers</a>
             </li>
+            <li>
+                <a href="#ambassadortab" data-toggle="tab">Ambassadors</a>
+            </li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="votertab">
@@ -33,6 +36,12 @@
                        cellspacing="0"
                        width="100%"></table>
             </div>
+            <div class="tab-pane" id="ambassadortab">
+                <table id="ambassadortable"
+                       class="table table-striped table-bordered"
+                       cellspacing="0"
+                       width="100%"></table>
+            </div>
         </div>
     </div>
     <script type="text/javascript"
@@ -40,6 +49,7 @@
     <script type="text/javascript">
      draw_voter_table("#votertable", {{ voterData | safe }}, "{{ building }}");
      draw_volunteer_table("#volunteertable", {{ volunteerData | safe }}, "{{ building }}");
+     draw_ambassador_table("#ambassadortable", {{ ambassadorData | safe }}, "{{ building }}");
     </script>
 </div>
 {% endblock %}

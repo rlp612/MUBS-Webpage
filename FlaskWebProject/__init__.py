@@ -43,25 +43,37 @@ def building(bldng):
         sp=app.config['SP_VOL'],
         args=(bldng,)
     )
+    ambassadorData = get_ambassadors(
+        fdbcred=app.config['F_DBCRED'],
+        ambassadorQry=app.config['Q_AMBA'],
+        bldng=bldng
+    )
     return render_template(
         'building.html',
         building=bldng.title(),
         title=title,
         bname=bname,
         voterData=json.dumps(voterData),
-        volunteerData=json.dumps(volunteerData)
+        volunteerData=json.dumps(volunteerData),
+        ambassadorData = json.dumps(ambassadorData)
     )
+
+
+def _qry_to_dict(fdbcred, q, qrykwargs={}):
+    """wrapper to query and get a list dict"""
+    dbcred = load_from_yaml(fdbcred)
+    con = mysql.connector.connect(**dbcred)
+    cur = con.cursor()
+    cur.execute(q, qrykwargs)
+    x = [dict(zip(cur.column_names, row)) for row in cur]
+    cur.close()
+    con.close()
+    return x
 
 
 def get_buildings(fdbcred, addressQry, withurls=False):
     """simply mysql query of buildings"""
-    dbcred = load_from_yaml(fdbcred)
-    con = mysql.connector.connect(**dbcred)
-    cur = con.cursor()
-    cur.execute(addressQry)
-    addr = [dict(zip(cur.column_names, row)) for row in cur]
-    cur.close()
-    con.close()
+    addr = _qry_to_dict(fdbcred, addressQry)
     addr = sorted(addr, key=lambda row: -row['unitcount'])
     for row in addr:
         row['address'] = row['address'].strip().lower()
@@ -107,6 +119,12 @@ def stored_procedure(fdbcred, sp, args):
     cur.close()
     con.close()
     return x
+
+
+def get_ambassadors(fdbcred, ambassadorQry, bldng):
+    """simply mysql query of ambassadors located in a given bldng"""
+    amba = _qry_to_dict(fdbcred, ambassadorQry, {'building': bldng})
+    return amba
 
 
 def load_from_yaml(fyaml):
