@@ -93,6 +93,7 @@ def get_building_name(fdbcred, bldngNameQry, buildingName):
         row['address'] = row['address'].title()
     return addr
 
+
 def stored_procedure(fdbcred, sp, args):
     dbcred = load_from_yaml(fdbcred)
     con = mysql.connector.connect(**dbcred)
@@ -106,16 +107,6 @@ def stored_procedure(fdbcred, sp, args):
     cur.close()
     con.close()
     return x
-
-
-def get_voters(fdbcred, building, spVot):
-    """mysql qry of voters in a building"""
-    return stored_procedure(fdbcred, spVot, (building,))
-
-
-def get_volunteers(fdbcred, building, spVol):
-    """mysql qry of volunteers in a building"""
-    return stored_procedure(fdbcred, spVol, (building,))
 
 
 def load_from_yaml(fyaml):
