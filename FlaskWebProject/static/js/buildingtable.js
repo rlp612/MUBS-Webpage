@@ -18,9 +18,22 @@ function bs_glyph_edit(data, type, row, meta) {
     return '<span class="glyphicon glyphicon-edit centericon" aria-hidden="true"></span>';
 }
 
-function ambassador_button(data, type, row, meta) {
+function delete_ambassador_button(data, type, row, meta) {
+    return '<div class="ambadelete"> \
+        <form class="amba-delete-form" action="' + row.deleteurl + '" method="POST"> \
+            <input type="hidden" id="bldng" name="bldng" value="' + row.bldng + '"> \
+            <div class="text-center"> \
+                <button class="btn btn-danger btn-sm amba-delete-button"> \
+                    <span class="glyphicon glyphicon-trash centericon" aria-hidden="true"></span> \
+                </button> \
+            </div> \
+        </form> \
+    </div>';
+}
+
+function new_ambassador_form(data, type, row, meta) {
     return '<div class="ambanew"> \
-        <form id="login" action="' + row.newurl + '" method="POST"> \
+        <form id="amba-new-form" action="' + row.newurl + '" method="POST"> \
             <input type="hidden" id="Address" name="Address" value="' + row.Address + '"> \
             <input type="hidden" id="Ambassador_Name" name="Ambassador_Name" value="' + row.Name + '"> \
             <input type="hidden" id="Email" name="Email" value="' + row.Email + '"> \
@@ -32,10 +45,10 @@ function ambassador_button(data, type, row, meta) {
     </div>';
 }
 
-function ambassador_update_form(data) {
+function update_ambassador_form(data) {
     return '<div class="ambaupdate"> \
         <div class="alert alert-danger">Editing ' + data.Ambassador_Name + '</div> \
-        <form id="login" action="' + data.editurl + '" method="POST"> \
+        <form id="amba-update-form" action="' + data.editurl + '" method="POST"> \
             <div class="form-group"> \
                 <label for="Ambassador_Name">Name</label> \
                 <input type="text" class="form-control" id="Ambassador_Name" name="Ambassador_Name" placeholder="Ambassador_Name" value="' + data.Ambassador_Name + '"> \
@@ -114,7 +127,8 @@ function draw_voter_table(tabId, voterData, building) {
                 { 'title': 'Phone', 'data': 'Phone' },
                 { 'title': 'Email', 'data': 'Email' },
                 { 'title': 'Age', 'data': 'Age' },
-                { 'title': 'Likely Party', 'data': 'Likely_party' },
+                { 'title': 'Likely Party', 'data': 'Likely_party' }/*,
+                { 'title': 'Make an Ambassador', 'render': new_ambassador_form }*/
             ],
             'order': [1, 'asc'],
             'pageLength': 50
@@ -142,7 +156,8 @@ function draw_volunteer_table(tabId, volunteerData, building) {
                 { 'title': 'City', 'data': 'City' },
                 { 'title': 'Phone', 'data': 'Phone' },
                 { 'title': 'Email', 'data': 'Email' },
-                { 'title': 'Age', 'data': 'Age' },
+                { 'title': 'Age', 'data': 'Age' }/*,
+                { 'title': 'Make Ambassador', 'render': new_ambassador_form }*/
             ],
             'order': [1, 'asc'],
             'pageLength': 50
@@ -175,6 +190,13 @@ function draw_ambassador_table(tabId, ambassadorData, building) {
                 { 'title': 'Apartment', 'data': 'Amb_Apartment' },
                 { 'title': 'Phone', 'data': 'Phone' },
                 { 'title': 'Email', 'data': 'Email' },
+                {
+                    'className': 'amba-delete dt-center',
+                    'orderable': false,
+                    'title': 'Delete Ambassador',
+                    'data': 'ambassadorID',
+                    'render': delete_ambassador_button
+                },
             ],
             'order': [1, 'asc'],
             'pageLength': 50
@@ -193,9 +215,19 @@ function draw_ambassador_table(tabId, ambassadorData, building) {
                 row.child.hide();
                 tr.removeClass('shown');
             } else {
-                row.child(ambassador_update_form(row.data())).show();
+                row.child(update_ambassador_form(row.data())).show();
                 tr.addClass('shown');
             }
+        });
+
+        // add confirm dialog to all delete buttons
+        $(function() {
+            $('.amba-delete-button').click(function(e) {
+                e.preventDefault();
+                if (confirm('Click OK to DELETE user:')) {
+                    $('form.amba-delete-form').submit();
+                }
+            });
         });
     });
 }

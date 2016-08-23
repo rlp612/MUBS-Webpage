@@ -31,6 +31,7 @@ FROM
 ;"""
 SP_VOL = "get_volunteers"
 SP_VOT = "get_voters"
+
 Q_AMBA = """SELECT * FROM MUB_Ambassadors WHERE address = %(building)s;"""
 Q_AMBA_UPDATE = """UPDATE MUB_Ambassadors
     SET
@@ -49,4 +50,7 @@ Q_AMBA_ADD = """INSERT INTO MUB_Ambassadors
         , Email = %(Email)s
         , Phone = %(Phone)s
         , Amb_Apartment = %(Amb_Apartment)s
+;"""
+Q_AMBA_DELETE = """DELETE FROM MUB_Ambassadors
+WHERE ambassadorID = %(ambassadorID)s
 ;"""

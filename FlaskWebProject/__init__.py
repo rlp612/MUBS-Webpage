@@ -53,6 +53,7 @@ def building(bldng):
         building=bldng.title(),
         title=title,
         bname=bname,
+        simplebldng=bldng,
         voterData=json.dumps(voterData),
         volunteerData=json.dumps(volunteerData),
         ambassadorData = json.dumps(ambassadorData)
@@ -70,7 +71,31 @@ def update_ambassador(id):
         id=id,
         updatedict=ambaForm
     )
+    print(bldng)
     return redirect(url_for('building', bldng=bldng))
+
+
+@app.route('/ambassador/', methods=['POST'])
+def new_ambassador():
+    """add an ambassador directly in mysql"""
+    ambaForm = request.form.copy()
+    x = new_ambassador_in_db(
+        fdbcred=app.config['F_DBCRED'],
+        ambassadorInsertQry=app.config['Q_AMBA_ADD'],
+        newAmbaDict=ambaForm
+    )
+    return redirect(url_for('building', bldng=ambaForm['simple_bldng']))
+
+
+@app.route('/delete_ambassadors/<id>', methods=['POST'])
+def delete_ambassador(id):
+    """update the ambassador directly in mysql"""
+    x = delete_ambassador_in_db(
+        fdbcred=app.config['F_DBCRED'],
+        ambassadorDeleteQry=app.config['Q_AMBA_DELETE'],
+        id=id
+    )
+    return redirect(url_for('building', bldng=request.form['bldng']))
 
 
 def _qry_to_dict(fdbcred, q, qrykwargs={}):
@@ -121,6 +146,7 @@ def get_ambassadors(fdbcred, ambassadorQry, bldng):
     amba = _qry_to_dict(fdbcred, ambassadorQry, {'building': bldng})
     for row in amba:
         row['editurl'] = url_for('update_ambassador', id=row['ambassadorID'])
+        row['deleteurl'] = url_for('delete_ambassador', id=row['ambassadorID'])
         row['bldng'] = bldng
     return amba
 
@@ -135,6 +161,31 @@ def update_ambassador_in_db(fdbcred, ambassadorUpdateQry, id, updatedict):
     cur = con.cursor()
     updatedict['ambassadorID'] = id
     cur.execute(ambassadorUpdateQry, updatedict)
+    con.commit()
+    x = [dict(zip(cur.column_names, row)) for row in cur]
+    cur.close()
+    con.close()
+    return x
+
+
+def delete_ambassador_in_db(fdbcred, ambassadorDeleteQry, id):
+    """simply delete the row with ambassadorID = id"""
+    dbcred = load_from_yaml(fdbcred)
+    con = mysql.connector.connect(**dbcred)
+    cur = con.cursor()
+    cur.execute(ambassadorDeleteQry, {'ambassadorID': id})
+    con.commit()
+    x = [dict(zip(cur.column_names, row)) for row in cur]
+    cur.close()
+    con.close()
+    return x
+
+
+def new_ambassador_in_db(fdbcred, ambassadorInsertQry, newAmbaDict):
+    dbcred = load_from_yaml(fdbcred)
+    con = mysql.connector.connect(**dbcred)
+    cur = con.cursor()
+    cur.execute(ambassadorInsertQry, newAmbaDict)
     con.commit()
     x = [dict(zip(cur.column_names, row)) for row in cur]
     cur.close()
