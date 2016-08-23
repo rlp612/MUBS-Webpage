@@ -32,3 +32,20 @@ FROM
 SP_VOL = "get_volunteers"
 SP_VOT = "get_voters"
 Q_AMBA = """SELECT * FROM MUB_Ambassadors WHERE address = %(building)s;"""
+Q_AMBA_UPDATE = """UPDATE MUB_Ambassadors
+    SET
+        Amb_Apartment = %(Amb_Apartment)s
+        , Email = %(Email)s
+        , Phone = %(Phone)s
+    WHERE
+        ambassadorID = %(ambassadorID)s
+;"""
+Q_AMBA_ADD = """INSERT INTO MUB_Ambassadors
+    SET
+        Address = %(Address)s
+        , Building_Name = %(Building_Name)s
+        , Ambassador_Name = %(Ambassador_Name)s
+        , Email = %(Email)s
+        , Phone = %(Phone)s
+        , Amb_Apartment = %(Amb_Apartment)s
+;"""

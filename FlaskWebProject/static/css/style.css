@@ -9,4 +9,11 @@ a.navbar-brand, a.navbar-brand.active {
 
 .jumbotron {
     background-color: rgba(130, 220, 247, 0.6);
-};
+}
+
+.centericon {
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    cursor: hand;
+}

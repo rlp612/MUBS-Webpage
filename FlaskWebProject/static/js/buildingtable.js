@@ -1,9 +1,63 @@
+/* --------------------------------------------------------------------------
+ * file constants
+ * -------------------------------------------------------------------------- */
+
 var TODAY = new Date();
 var YYYYMMDD = TODAY.toISOString().substring(0, 10);
+
+
+/* --------------------------------------------------------------------------
+ * rendering functions
+ * -------------------------------------------------------------------------- */
 
 function building_url(data, type, row, meta) {
     return "<a href='" + row.url + "'>" + data + "</a>";
 }
+
+function bs_glyph_edit(data, type, row, meta) {
+    return '<span class="glyphicon glyphicon-edit centericon" aria-hidden="true"></span>';
+}
+
+function ambassador_button(data, type, row, meta) {
+    return '<div class="ambanew"> \
+        <form id="login" action="' + row.newurl + '" method="POST"> \
+            <input type="hidden" id="Address" name="Address" value="' + row.Address + '"> \
+            <input type="hidden" id="Ambassador_Name" name="Ambassador_Name" value="' + row.Name + '"> \
+            <input type="hidden" id="Email" name="Email" value="' + row.Email + '"> \
+            <input type="hidden" id="Phone" name="Phone" value="' + row.Phone + '"> \
+            <div class="text-center"> \
+                <button type="submit" class="btn btn-primary btn-sm">Ambassador</button> \
+            </div> \
+        </form> \
+    </div>';
+}
+
+function ambassador_update_form(data) {
+    return '<div class="ambaupdate"> \
+        <div class="alert alert-danger">Editing ' + data.Ambassador_Name + '</div> \
+        <form id="login" action="' + data.editurl + '" method="POST"> \
+            <div class="form-group"> \
+                <label for="Amb_Apartment">Apartment</label> \
+                <input type="text" class="form-control" id="Amb_Apartment" name="Amb_Apartment" placeholder="Amb_Apartment" value="' + data.Amb_Apartment + '"> \
+            </div> \
+            <div class="form-group"> \
+                <label for="Phone">Phone</label> \
+                <input type="tel" class="form-control" id="Phone" name="Phone" placeholder="Phone" value="' + data.Phone + '"> \
+            </div> \
+            <div class="form-group"> \
+                <label for="Email">Email</label> \
+                <input type="email" class="form-control" id="Email" name="Email" placeholder="Email" value="' + data.Email + '"> \
+            </div> \
+            <input type="hidden" id="bldng" name="bldng" value="' + data.bldng + '"> \
+            <button type="submit" class="btn btn-danger">Update</button> \
+        </form> \
+    </div>';
+}
+
+
+/* --------------------------------------------------------------------------
+ * making tables
+ * -------------------------------------------------------------------------- */
 
 function draw_building_table(tabId, buildingData) {
     $(document).ready(function() {
@@ -107,6 +161,12 @@ function draw_ambassador_table(tabId, ambassadorData, building) {
                 'print'
             ],
             'columns': [
+                {
+                    'className': 'details-control dt-center',
+                    'orderable': false,
+                    'data': 'ambassadorID',
+                    'render': bs_glyph_edit
+                },
                 { 'title': 'Name', 'data': 'Ambassador_Name' },
                 { 'title': 'Apartment', 'data': 'Amb_Apartment' },
                 { 'title': 'Phone', 'data': 'Phone' },
@@ -118,5 +178,20 @@ function draw_ambassador_table(tabId, ambassadorData, building) {
 
         ambassadortable.buttons().container()
             .appendTo( tabId + '_wrapper .col-sm-6:eq(0)' );
+
+        // add event listener for opening and closing details
+        $(tabId + ' tbody').on('click', 'td.details-control', function() {
+            var tr = $(this).closest('tr');
+            var row = ambassadortable.row(tr);
+            console.log(row.data());
+
+            if (row.child.isShown()) {
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+                row.child(ambassador_update_form(row.data())).show();
+                tr.addClass('shown');
+            }
+        });
     });
 }

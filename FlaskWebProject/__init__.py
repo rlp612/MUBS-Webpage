@@ -4,7 +4,7 @@ import mysql.connector
 import requests
 import yaml
 
-from flask import Flask, render_template, request, url_for
+from flask import Flask, jsonify, redirect, render_template, request, url_for
 
 
 app = Flask(__name__, instance_relative_config=True)
@@ -59,6 +59,20 @@ def building(bldng):
     )
 
 
+@app.route('/ambassadors/<id>', methods=['POST'])
+def update_ambassador(id):
+    """update the ambassador directly in mysql"""
+    ambaForm = request.form.copy()
+    bldng = ambaForm.pop('bldng')
+    x = update_ambassador_in_db(
+        fdbcred=app.config['F_DBCRED'],
+        ambassadorUpdateQry=app.config['Q_AMBA_UPDATE'],
+        id=id,
+        updatedict=ambaForm
+    )
+    return redirect(url_for('building', bldng=bldng))
+
+
 def _qry_to_dict(fdbcred, q, qrykwargs={}):
     """wrapper to query and get a list dict"""
     dbcred = load_from_yaml(fdbcred)
@@ -87,25 +101,6 @@ def get_buildings(fdbcred, addressQry, withurls=False):
     return addr
 
 
-def get_building_name(fdbcred, bldngNameQry, buildingName):
-    """given a building, find the building name (in the db called neighborhood)"""
-    dbcred = load_from_yaml(fdbcred)
-    con = mysql.connector.connect(**dbcred)
-    cur = con.cursor()
-    cur.execute(bldngNameQry)
-    addr = [dict(zip(cur.column_names, row)) for row in cur]
-    cur.close()
-    con.close()
-    addr = sorted(addr, key=lambda row: -row['unitcount'])
-    for row in addr:
-        row['address'] = row['address'].strip().lower()
-        row['neighborhood'] = (row['neighborhood'] or '').strip().lower().title()
-        if withurls:
-            row['url'] = url_for('building', bldng=row['address'])
-        row['address'] = row['address'].title()
-    return addr
-
-
 def stored_procedure(fdbcred, sp, args):
     dbcred = load_from_yaml(fdbcred)
     con = mysql.connector.connect(**dbcred)
@@ -124,7 +119,27 @@ def stored_procedure(fdbcred, sp, args):
 def get_ambassadors(fdbcred, ambassadorQry, bldng):
     """simply mysql query of ambassadors located in a given bldng"""
     amba = _qry_to_dict(fdbcred, ambassadorQry, {'building': bldng})
+    for row in amba:
+        row['editurl'] = url_for('update_ambassador', id=row['ambassadorID'])
+        row['bldng'] = bldng
     return amba
+
+
+def update_ambassador_in_db(fdbcred, ambassadorUpdateQry, id, updatedict):
+    """simply update the row matching the id with the details provided in
+    updatedict
+
+    """
+    dbcred = load_from_yaml(fdbcred)
+    con = mysql.connector.connect(**dbcred)
+    cur = con.cursor()
+    updatedict['ambassadorID'] = id
+    cur.execute(ambassadorUpdateQry, updatedict)
+    con.commit()
+    x = [dict(zip(cur.column_names, row)) for row in cur]
+    cur.close()
+    con.close()
+    return x
 
 
 def load_from_yaml(fyaml):
