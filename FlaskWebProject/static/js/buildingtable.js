@@ -37,6 +37,10 @@ function ambassador_update_form(data) {
         <div class="alert alert-danger">Editing ' + data.Ambassador_Name + '</div> \
         <form id="login" action="' + data.editurl + '" method="POST"> \
             <div class="form-group"> \
+                <label for="Ambassador_Name">Name</label> \
+                <input type="text" class="form-control" id="Ambassador_Name" name="Ambassador_Name" placeholder="Ambassador_Name" value="' + data.Ambassador_Name + '"> \
+            </div> \
+            <div class="form-group"> \
                 <label for="Amb_Apartment">Apartment</label> \
                 <input type="text" class="form-control" id="Amb_Apartment" name="Amb_Apartment" placeholder="Amb_Apartment" value="' + data.Amb_Apartment + '"> \
             </div> \

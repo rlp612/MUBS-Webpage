@@ -34,7 +34,8 @@ SP_VOT = "get_voters"
 Q_AMBA = """SELECT * FROM MUB_Ambassadors WHERE address = %(building)s;"""
 Q_AMBA_UPDATE = """UPDATE MUB_Ambassadors
     SET
-        Amb_Apartment = %(Amb_Apartment)s
+        Ambassador_Name = %(Ambassador_Name)s
+        , Amb_Apartment = %(Amb_Apartment)s
         , Email = %(Email)s
         , Phone = %(Phone)s
     WHERE
