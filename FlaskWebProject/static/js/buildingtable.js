@@ -51,11 +51,11 @@ function update_ambassador_form(data) {
         <form class="amba-update-form" action="' + data.editurl + '" method="POST"> \
             <div class="form-group"> \
                 <label for="Ambassador_Name">Name</label> \
-                <input type="text" class="form-control" id="Ambassador_Name" name="Ambassador_Name" placeholder="Ambassador_Name" value="' + data.Ambassador_Name + '"> \
+                <input type="text" class="form-control" id="Ambassador_Name" name="Ambassador_Name" placeholder="Name" value="' + data.Ambassador_Name + '"> \
             </div> \
             <div class="form-group"> \
                 <label for="Amb_Apartment">Apartment</label> \
-                <input type="text" class="form-control" id="Amb_Apartment" name="Amb_Apartment" placeholder="Amb_Apartment" value="' + data.Amb_Apartment + '"> \
+                <input type="text" class="form-control" id="Amb_Apartment" name="Amb_Apartment" placeholder="Apartment" value="' + data.Amb_Apartment + '"> \
             </div> \
             <div class="form-group"> \
                 <label for="Phone">Phone</label> \
