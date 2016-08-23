@@ -48,7 +48,7 @@ function new_ambassador_form(data, type, row, meta) {
 function update_ambassador_form(data) {
     return '<div class="ambaupdate"> \
         <div class="alert alert-danger">Editing ' + data.Ambassador_Name + '</div> \
-        <form id="amba-update-form" action="' + data.editurl + '" method="POST"> \
+        <form class="amba-update-form" action="' + data.editurl + '" method="POST"> \
             <div class="form-group"> \
                 <label for="Ambassador_Name">Name</label> \
                 <input type="text" class="form-control" id="Ambassador_Name" name="Ambassador_Name" placeholder="Ambassador_Name" value="' + data.Ambassador_Name + '"> \
@@ -66,7 +66,7 @@ function update_ambassador_form(data) {
                 <input type="email" class="form-control" id="Email" name="Email" placeholder="Email" value="' + data.Email + '"> \
             </div> \
             <input type="hidden" id="bldng" name="bldng" value="' + data.bldng + '"> \
-            <button type="submit" class="btn btn-danger">Update</button> \
+            <button class="btn btn-danger amba-update-button">Update</button> \
         </form> \
     </div>';
 }
@@ -209,7 +209,6 @@ function draw_ambassador_table(tabId, ambassadorData, building) {
         $(tabId + ' tbody').on('click', 'td.details-control', function() {
             var tr = $(this).closest('tr');
             var row = ambassadortable.row(tr);
-            console.log(row.data());
 
             if (row.child.isShown()) {
                 row.child.hide();
@@ -217,6 +216,16 @@ function draw_ambassador_table(tabId, ambassadorData, building) {
             } else {
                 row.child(update_ambassador_form(row.data())).show();
                 tr.addClass('shown');
+
+                // add confirm dialog to all update buttons
+                $(function() {
+                    $('.amba-update-button').click(function(e) {
+                        e.preventDefault();
+                        if (confirm('Click OK to UPDATE user:')) {
+                            $('form.amba-update-form').submit();
+                        }
+                    });
+                });
             }
         });
 
