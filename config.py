@@ -10,7 +10,8 @@ F_DBCRED = os.path.expanduser(
     )
 )
 
-Q_ADDR = """SELECT
+Q_ADDR = "SELECT * FROM ACDCMUBS2016.MUBS_Page_View;"
+Q_ADDR_BAK = """SELECT
     lft.address
     , lft.unitcount
     , lft.neighborhood
