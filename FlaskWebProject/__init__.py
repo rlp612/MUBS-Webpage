@@ -1,14 +1,24 @@
-import json
-
+import datetime
 import mysql.connector
 import requests
 import yaml
 
-from flask import Flask, jsonify, redirect, render_template, request, url_for
+from flask import Flask, json, redirect, render_template, request, url_for
+from flask_sqlalchemy import SQLAlchemy
+
+from .utils import load_from_yaml, set_sqlalchemy_params
 
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_object('config')
+
+db = SQLAlchemy(app)
+# this is all bending over backwards to reflect the db structure into db.Model
+set_sqlalchemy_params(app)
+db.init_app(app)
+db.Model.metadata.reflect(db.engine)
+
+from .models import BuildingEvent
 
 
 @app.route('/')
@@ -48,6 +58,7 @@ def building(bldng):
         ambassadorQry=app.config['Q_AMBA'],
         bldng=bldng
     )
+    eventData = get_building_events(bldng)
     return render_template(
         'building.html',
         building=bldng.title(),
@@ -56,9 +67,14 @@ def building(bldng):
         simplebldng=bldng,
         voterData=json.dumps(voterData),
         volunteerData=json.dumps(volunteerData),
-        ambassadorData = json.dumps(ambassadorData)
+        ambassadorData=json.dumps(ambassadorData),
+        eventData=json.dumps(eventData)
     )
 
+
+# ------------------------- #
+# ambassador CRUD routes    #
+# ------------------------- #
 
 @app.route('/ambassadors/<id>', methods=['POST'])
 def update_ambassador(id):
@@ -95,6 +111,62 @@ def delete_ambassador(id):
         ambassadorDeleteQry=app.config['Q_AMBA_DELETE'],
         id=id
     )
+    return redirect(url_for('building', bldng=request.form['bldng']))
+
+
+# ------------------------- #
+# event CRUD routes         #
+# ------------------------- #
+
+@app.route('/events/<eventId>', methods=['POST'])
+def update_event(eventId):
+    """update the event directly in mysql"""
+    ev = BuildingEvent.query.filter_by(Event_ID=eventId).first_or_404()
+    evForm = request.form.copy()
+    bldng = evForm.pop('bldng')
+
+    # update event and commit
+    for (k, v) in evForm.items():
+        try:
+            if k == 'Event_ID':
+                # don't update pks, even if they're the same by virtue of qry
+                continue
+            if k == 'Event_date':
+                if v == '':
+                    v = None
+                else:
+                    v = datetime.datetime.strptime(v, '%m/%d/%Y')
+            setattr(ev, k, v)
+        except Exception as e:
+            print('error adding event: {}'.format(e))
+    db.session.commit()
+
+    return redirect(url_for('building', bldng=bldng))
+
+
+@app.route('/event/', methods=['POST'])
+def new_event():
+    """add an event directly in mysql"""
+    evForm = request.form.copy()
+    nev = BuildingEvent()
+    for (k, v) in evForm.items():
+        try:
+            if k == 'Event_date' and v:
+                v = datetime.datetime.strptime(v, '%m/%d/%Y')
+            setattr(nev, k, v)
+        except Exception as e:
+            print('error adding event: {}'.format(e))
+    db.session.add(nev)
+    db.session.commit()
+    return redirect(url_for('building', bldng=evForm['simple_bldng']))
+
+
+@app.route('/delete_event/<eventId>', methods=['POST'])
+def delete_event(eventId):
+    """update the event directly in mysql"""
+    ev = BuildingEvent.query.filter_by(Event_ID=eventId).first()
+    db.session.delete(ev)
+    db.session.commit()
     return redirect(url_for('building', bldng=request.form['bldng']))
 
 
@@ -193,9 +265,17 @@ def new_ambassador_in_db(fdbcred, ambassadorInsertQry, newAmbaDict):
     return x
 
 
-def load_from_yaml(fyaml):
-    with open(fyaml, 'r') as f:
-        return yaml.load(f)
+def get_building_events(bldng):
+    events = [
+        event.__dict__
+        for event in BuildingEvent.query.filter_by(Apt_address=bldng).all()
+    ]
+    for event in events:
+        del event['_sa_instance_state']
+        event['editurl'] = url_for('update_event', eventId=event['Event_ID'])
+        event['deleteurl'] = url_for('delete_event', eventId=event['Event_ID'])
+        event['bldng'] = bldng
+    return events
 
 
 app.debug = True

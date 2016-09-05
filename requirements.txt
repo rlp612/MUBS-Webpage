@@ -1,3 +1,5 @@
 Flask<1
+Flask-SQLAlchemy==2.1
 PyYAML==3.11
 requests==2.11
+SQLAlchemy==1.0.13

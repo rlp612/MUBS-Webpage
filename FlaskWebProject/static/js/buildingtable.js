@@ -31,15 +31,14 @@ function delete_ambassador_button(data, type, row, meta) {
     </div>';
 }
 
-function new_ambassador_form(data, type, row, meta) {
-    return '<div class="ambanew"> \
-        <form id="amba-new-form" action="' + row.newurl + '" method="POST"> \
-            <input type="hidden" id="Address" name="Address" value="' + row.Address + '"> \
-            <input type="hidden" id="Ambassador_Name" name="Ambassador_Name" value="' + row.Name + '"> \
-            <input type="hidden" id="Email" name="Email" value="' + row.Email + '"> \
-            <input type="hidden" id="Phone" name="Phone" value="' + row.Phone + '"> \
+function delete_event_button(data, type, row, meta) {
+    return '<div class="eventdelete"> \
+        <form class="event-delete-form" action="' + row.deleteurl + '" method="POST"> \
+            <input type="hidden" id="bldng" name="bldng" value="' + row.bldng + '"> \
             <div class="text-center"> \
-                <button type="submit" class="btn btn-primary btn-sm">Ambassador</button> \
+                <button class="btn btn-danger btn-sm event-delete-button"> \
+                    <span class="glyphicon glyphicon-trash centericon" aria-hidden="true"></span> \
+                </button> \
             </div> \
         </form> \
     </div>';
@@ -67,6 +66,37 @@ function update_ambassador_form(data) {
             </div> \
             <input type="hidden" id="bldng" name="bldng" value="' + data.bldng + '"> \
             <button class="btn btn-danger amba-update-button">Update</button> \
+        </form> \
+    </div>';
+}
+
+function update_event_form(data) {
+    return '<div class="eventupdate"> \
+        <div class="alert alert-danger">Editing event at ' + data.Apt_address + '</div> \
+        <form class="event-update-form" action="' + data.editurl + '" method="POST"> \
+            <div class="form-group"> \
+                <label for="Apt_address">Address</label> \
+                <input type="text" class="form-control" id="Apt_address" name="Apt_address" placeholder="Address" value="' + data.Apt_address + '"> \
+            </div> \
+            <div class="form-group"> \
+                <label for="Event_date">Date</label> \
+                <div class="input-group date" data-provide="datepicker"> \
+                    <div class="input-group-addon"> \
+                        <span class="glyphicon glyphicon-th"></span> \
+                    </div> \
+                    <input type="text" class="form-control" id="Event_date" name="Event_date" placeholder="Date" value="' + data.Event_date + '"> \
+                </div> \
+            </div> \
+            <div class="form-group"> \
+                <label for="Event_description">Description</label> \
+                <input type="text" class="form-control" id="Event_description" name="Event_description" placeholder="Description" value="' + data.Event_description + '"> \
+            </div> \
+            <div class="form-group"> \
+                <label for="Notes">Notes</label> \
+                <input type="text" class="form-control" id="Notes" name="Notes" placeholder="Notes" value="' + data.Notes + '"> \
+            </div> \
+            <input type="hidden" id="bldng" name="bldng" value="' + data.bldng + '"> \
+            <button class="btn btn-danger event-update-button">Update</button> \
         </form> \
     </div>';
 }
@@ -222,7 +252,7 @@ function draw_ambassador_table(tabId, ambassadorData, building) {
                     $('.amba-update-button').click(function(e) {
                         e.preventDefault();
                         if (confirm('Click OK to UPDATE user:')) {
-                            $('form.amba-update-form').submit();
+                            e.target.closest('form.amba-update-form').submit();
                         }
                     });
                 });
@@ -234,7 +264,86 @@ function draw_ambassador_table(tabId, ambassadorData, building) {
             $('.amba-delete-button').click(function(e) {
                 e.preventDefault();
                 if (confirm('Click OK to DELETE user:')) {
-                    $('form.amba-delete-form').submit();
+                    e.target.closest('form.amba-delete-form').submit();
+                }
+            });
+        });
+    });
+}
+
+function draw_event_table(tabId, eventData, building) {
+    $(document).ready(function() {
+        var eventtable = $(tabId).DataTable({
+            'data': eventData,
+            'buttons': [
+                'copy',
+                { 'extend': 'csv', filename: 'mubs events ' + building + ' ' + YYYYMMDD },
+                { 'extend': 'excel', filename: 'mubs events ' + building + ' ' + YYYYMMDD },
+                { 'extend': 'pdf', filename: 'mubs events ' + building + ' ' + YYYYMMDD },
+                'print'
+            ],
+            'columns': [
+                {
+                    'className': 'details-control dt-center',
+                    'orderable': false,
+                    'data': 'eventID',
+                    'render': bs_glyph_edit
+                },
+                { 'title': 'Apartment', 'data': 'Apt_address' },
+                { 'title': 'Date', 'data': 'Event_date' },
+                { 'title': 'Description', 'data': 'Event_description' },
+                { 'title': 'VoterReg', 'data': 'VoterReg' },
+                { 'title': 'GOTV', 'data': 'GOTV' },
+                { 'title': 'Canvass', 'data': 'Canvass' },
+                { 'title': 'Messenger_Week', 'data': 'Messenger_Week' },
+                { 'title': 'Refused_Event', 'data': 'Refused_Event' },
+                { 'title': 'Notes', 'data': 'Notes' },
+                { 'title': 'Update_date', 'data': 'Update_date' },
+                {
+                    'className': 'event-delete dt-center',
+                    'orderable': false,
+                    'title': 'Delete Event',
+                    'data': 'eventID',
+                    'render': delete_event_button
+                },
+            ],
+            'order': [1, 'asc'],
+            'pageLength': 50
+        });
+
+        eventtable.buttons().container()
+            .appendTo( tabId + '_wrapper .col-sm-6:eq(0)' );
+
+        // add event listener for opening and closing details
+        $(tabId + ' tbody').on('click', 'td.details-control', function() {
+            var tr = $(this).closest('tr');
+            var row = eventtable.row(tr);
+
+            if (row.child.isShown()) {
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+                row.child(update_event_form(row.data())).show();
+                tr.addClass('shown');
+
+                // add confirm dialog to all update buttons
+                $(function() {
+                    $('.event-update-button').click(function(e) {
+                        e.preventDefault();
+                        if (confirm('Click OK to UPDATE user:')) {
+                            e.target.closest('form.event-update-form').submit();
+                        }
+                    });
+                });
+            }
+        });
+
+        // add confirm dialog to all delete buttons
+        $(function() {
+            $('.event-delete-button').click(function(e) {
+                e.preventDefault();
+                if (confirm('Click OK to DELETE user:')) {
+                    e.target.closest('form.event-delete-form').submit();
                 }
             });
         });
