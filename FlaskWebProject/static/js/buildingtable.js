@@ -387,10 +387,9 @@ function draw_unregistered_apts_table(tabId, noVoterAptData, building) {
                 'print'
             ],
             'columns': [
-                { 'title': 'Apartment Address', 'data': 'Address' },
-                { 'title': 'Unit Number', 'data': 'UnitNum' }
+                { 'title': 'Apartment Address', 'data': 'Address' }
             ],
-            'order': [1, 'asc'],
+            'order': [0, 'asc'],
             'pageLength': 50
         });
 
