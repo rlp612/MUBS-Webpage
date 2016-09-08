@@ -59,6 +59,11 @@ def building(bldng):
         bldng=bldng
     )
     eventData = get_building_events(bldng)
+    noVoterAptData = get_no_voter_apts(
+        fdbcred=app.config['F_DBCRED'],
+        spNoVoter=app.config['SP_NO_VOTER'],
+        bldng=bldng
+    )
     return render_template(
         'building.html',
         building=bldng.title(),
@@ -69,7 +74,8 @@ def building(bldng):
         volunteerData=json.dumps(volunteerData),
         ambassadorData=json.dumps(ambassadorData),
         eventData=json.dumps(eventData),
-        eventtypes=BuildingEvent.eventTypes
+        eventtypes=BuildingEvent.eventTypes,
+        noVoterAptData=json.dumps(noVoterAptData)
     )
 
 
@@ -217,6 +223,12 @@ def stored_procedure(fdbcred, sp, args):
     cur.close()
     con.close()
     return x
+
+
+def get_no_voter_apts(fdbcred, spNoVoter, bldng):
+    noVoterApts = stored_procedure(fdbcred, spNoVoter, (bldng,))
+    noVoterApts = sorted(noVoterApts, key=lambda row:row['UnitNum'])
+    return noVoterApts
 
 
 def get_ambassadors(fdbcred, ambassadorQry, bldng):

@@ -20,7 +20,6 @@ function bs_glyph_edit(data, type, row, meta) {
 
 function bs_glyph_refused(data, type, row, meta) {
     if (data == 1) {
-        console.log('returning span');
         return '<span class="glyphicon glyphicon-ban-circle centericon" aria-hidden="true"></span>';
     } else {
         return null;
@@ -373,5 +372,29 @@ function draw_event_table(tabId, eventData, building) {
                 }
             });
         });
+    });
+}
+
+function draw_unregistered_apts_table(tabId, noVoterAptData, building) {
+    $(document).ready(function() {
+        var noVoterApttable = $(tabId).DataTable({
+            'data': noVoterAptData,
+            'buttons': [
+                'copy',
+                { 'extend': 'csv', filename: 'mubs unregistered apts ' + building + ' ' + YYYYMMDD },
+                { 'extend': 'excel', filename: 'mubs unregistered apts ' + building + ' ' + YYYYMMDD },
+                { 'extend': 'pdf', filename: 'mubs unregistered apts ' + building + ' ' + YYYYMMDD },
+                'print'
+            ],
+            'columns': [
+                { 'title': 'Apartment Address', 'data': 'Address' },
+                { 'title': 'Unit Number', 'data': 'UnitNum' }
+            ],
+            'order': [1, 'asc'],
+            'pageLength': 50
+        });
+
+        noVoterApttable.buttons().container()
+            .appendTo( tabId + '_wrapper .col-sm-6:eq(0)' );
     });
 }

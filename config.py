@@ -41,6 +41,7 @@ FROM
 ;"""
 SP_VOL = "get_volunteers"
 SP_VOT = "get_voters"
+SP_NO_VOTER = "no_voter_apts"
 
 Q_AMBA = """SELECT * FROM MUB_Ambassadors WHERE address = %(building)s;"""
 Q_AMBA_UPDATE = """UPDATE MUB_Ambassadors
