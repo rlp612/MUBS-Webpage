@@ -15,7 +15,16 @@ function building_url(data, type, row, meta) {
 }
 
 function bs_glyph_edit(data, type, row, meta) {
-    return '<span class="glyphicon glyphicon-edit centericon" aria-hidden="true"></span>';
+    return '<span class="glyphicon glyphicon-edit centericon cursoricon" aria-hidden="true"></span>';
+}
+
+function bs_glyph_refused(data, type, row, meta) {
+    if (data == 1) {
+        console.log('returning span');
+        return '<span class="glyphicon glyphicon-ban-circle centericon" aria-hidden="true"></span>';
+    } else {
+        return null;
+    }
 }
 
 function delete_ambassador_button(data, type, row, meta) {
@@ -24,7 +33,7 @@ function delete_ambassador_button(data, type, row, meta) {
             <input type="hidden" id="bldng" name="bldng" value="' + row.bldng + '"> \
             <div class="text-center"> \
                 <button class="btn btn-danger btn-sm amba-delete-button"> \
-                    <span class="glyphicon glyphicon-trash centericon" aria-hidden="true"></span> \
+                    <span class="glyphicon glyphicon-trash centericon cursoricon" aria-hidden="true"></span> \
                 </button> \
             </div> \
         </form> \
@@ -37,7 +46,7 @@ function delete_event_button(data, type, row, meta) {
             <input type="hidden" id="bldng" name="bldng" value="' + row.bldng + '"> \
             <div class="text-center"> \
                 <button class="btn btn-danger btn-sm event-delete-button"> \
-                    <span class="glyphicon glyphicon-trash centericon" aria-hidden="true"></span> \
+                    <span class="glyphicon glyphicon-trash centericon cursoricon" aria-hidden="true"></span> \
                 </button> \
             </div> \
         </form> \
@@ -75,8 +84,16 @@ function update_event_form(data) {
         <div class="alert alert-danger">Editing event at ' + data.Apt_address + '</div> \
         <form class="event-update-form" action="' + data.editurl + '" method="POST"> \
             <div class="form-group"> \
-                <label for="Apt_address">Address</label> \
-                <input type="text" class="form-control" id="Apt_address" name="Apt_address" placeholder="Address" value="' + data.Apt_address + '"> \
+                <label for="Event_type">Event Type</label> \
+                <select class="selectpicker form-control" \
+                        id="Event_type" \
+                        name="Event_type" \
+                        placeholder="Event Type"> \
+                    <option>Voter Registration</option> \
+                    <option>GOTV</option> \
+                    <option>Canvass</option> \
+                    <option>Messenger Week</option> \
+                </select> \
             </div> \
             <div class="form-group"> \
                 <label for="Event_date">Date</label> \
@@ -95,6 +112,14 @@ function update_event_form(data) {
                 <label for="Notes">Notes</label> \
                 <input type="text" class="form-control" id="Notes" name="Notes" placeholder="Notes" value="' + data.Notes + '"> \
             </div> \
+            <div class="form-group"> \
+                <div class="checkbox"> \
+                    <label> \
+                        <input type="checkbox" id="Refused_Event" name="Refused_Event">Refused Event \
+                    </label> \
+                </div> \
+            </div> \
+            <input type="hidden" id="Apt_address" name="Apt_address" value="' + data.Apt_address + '"> \
             <input type="hidden" id="bldng" name="bldng" value="' + data.bldng + '"> \
             <button class="btn btn-danger event-update-button">Update</button> \
         </form> \
@@ -291,14 +316,15 @@ function draw_event_table(tabId, eventData, building) {
                 },
                 { 'title': 'Apartment', 'data': 'Apt_address' },
                 { 'title': 'Date', 'data': 'Event_date' },
+                { 'title': 'Event Type', 'data': 'Event_type' },
                 { 'title': 'Description', 'data': 'Event_description' },
-                { 'title': 'VoterReg', 'data': 'VoterReg' },
-                { 'title': 'GOTV', 'data': 'GOTV' },
-                { 'title': 'Canvass', 'data': 'Canvass' },
-                { 'title': 'Messenger_Week', 'data': 'Messenger_Week' },
-                { 'title': 'Refused_Event', 'data': 'Refused_Event' },
+                {
+                    'title': 'Refused Event',
+                    'data': 'Refused_Event',
+                    'render': bs_glyph_refused
+                },
                 { 'title': 'Notes', 'data': 'Notes' },
-                { 'title': 'Update_date', 'data': 'Update_date' },
+                { 'title': 'Update Date', 'data': 'Update_date' },
                 {
                     'className': 'event-delete dt-center',
                     'orderable': false,

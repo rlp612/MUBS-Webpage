@@ -68,7 +68,8 @@ def building(bldng):
         voterData=json.dumps(voterData),
         volunteerData=json.dumps(volunteerData),
         ambassadorData=json.dumps(ambassadorData),
-        eventData=json.dumps(eventData)
+        eventData=json.dumps(eventData),
+        eventtypes=BuildingEvent.eventTypes
     )
 
 
@@ -135,7 +136,12 @@ def update_event(eventId):
                 if v == '':
                     v = None
                 else:
-                    v = datetime.datetime.strptime(v, '%m/%d/%Y')
+                    try:
+                        v = datetime.datetime.strptime(v, '%m/%d/%Y')
+                    except:
+                        continue
+            if k == 'Refused_Event':
+                v = (v == 'on')
             setattr(ev, k, v)
         except Exception as e:
             print('error adding event: {}'.format(e))
