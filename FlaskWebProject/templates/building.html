@@ -12,7 +12,7 @@
 <div class="container">
     <h2>{{ title }}</h2>
     <div id="tableTabs" class="container">
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs" id="tableTabsList">
             <li class="active">
                 <a href="#votertab" data-toggle="tab">Voters</a>
             </li>
@@ -72,6 +72,23 @@
      draw_ambassador_table("#ambassadortable", {{ ambassadorData | safe }}, "{{ building }}");
      draw_event_table("#eventtable", {{ eventData | safe }}, "{{ building }}");
      draw_unregistered_apts_table('#unregisteredaptstable', {{ noVoterAptData | safe }}, "{{ building }}")
+    </script>
+    <script type="text/javascript">
+     console.log('hello');
+     $('#tableTabsList a').click(function(e) {
+         e.preventDefault();
+         $(this).tab('show');
+     });
+
+     // store the currently selected tab in the hash value
+     $("ul.nav-tabs > li > a").on("shown.bs.tab", function(e) {
+         var id = $(e.target).attr("href").substr(1);
+         window.location.hash = id;
+     });
+
+     // on load of the page: switch to the currently selected tab
+     var hash = window.location.hash;
+     $('#tableTabsList a[href="' + hash + '"]').tab('show');
     </script>
 </div>
 {% endblock %}

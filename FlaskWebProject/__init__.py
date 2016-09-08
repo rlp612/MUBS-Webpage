@@ -95,7 +95,7 @@ def update_ambassador(id):
         updatedict=ambaForm
     )
     print(bldng)
-    return redirect(url_for('building', bldng=bldng))
+    return redirect(url_for('building', bldng=bldng, _anchor='ambassadortab'))
 
 
 @app.route('/ambassador/', methods=['POST'])
@@ -107,7 +107,11 @@ def new_ambassador():
         ambassadorInsertQry=app.config['Q_AMBA_ADD'],
         newAmbaDict=ambaForm
     )
-    return redirect(url_for('building', bldng=ambaForm['simple_bldng']))
+    return redirect(
+        url_for(
+            'building', bldng=ambaForm['simple_bldng'], _anchor='ambassadortab'
+        )
+    )
 
 
 @app.route('/delete_ambassadors/<id>', methods=['POST'])
@@ -118,7 +122,11 @@ def delete_ambassador(id):
         ambassadorDeleteQry=app.config['Q_AMBA_DELETE'],
         id=id
     )
-    return redirect(url_for('building', bldng=request.form['bldng']))
+    return redirect(
+        url_for(
+            'building', bldng=request.form['bldng'], _anchor='ambassadortab'
+        )
+    )
 
 
 # ------------------------- #
@@ -153,7 +161,7 @@ def update_event(eventId):
             print('error adding event: {}'.format(e))
     db.session.commit()
 
-    return redirect(url_for('building', bldng=bldng))
+    return redirect(url_for('building', bldng=bldng, _anchor='eventtab'))
 
 
 @app.route('/event/', methods=['POST'])
@@ -170,7 +178,9 @@ def new_event():
             print('error adding event: {}'.format(e))
     db.session.add(nev)
     db.session.commit()
-    return redirect(url_for('building', bldng=evForm['simple_bldng']))
+    return redirect(
+        url_for('building', bldng=evForm['simple_bldng'], _anchor='eventtab')
+    )
 
 
 @app.route('/delete_event/<eventId>', methods=['POST'])
@@ -179,7 +189,9 @@ def delete_event(eventId):
     ev = BuildingEvent.query.filter_by(Event_ID=eventId).first()
     db.session.delete(ev)
     db.session.commit()
-    return redirect(url_for('building', bldng=request.form['bldng']))
+    return redirect(
+        url_for('building', bldng=request.form['bldng'], _anchor='eventtab')
+    )
 
 
 def _qry_to_dict(fdbcred, q, qrykwargs={}):
