@@ -4,6 +4,7 @@ import requests
 import yaml
 
 from flask import Flask, json, redirect, render_template, request, url_for
+from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 
 from .utils import load_from_yaml, set_sqlalchemy_params
@@ -18,6 +19,7 @@ set_sqlalchemy_params(app)
 db.init_app(app)
 db.Model.metadata.reflect(db.engine)
 
+Bootstrap(app)
 
 
 from .models import BuildingEvent, CommunityAttributes

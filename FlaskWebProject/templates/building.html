@@ -1,7 +1,10 @@
 {# _myapp/templates/building.html_ #}
 
 {% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
 {% block title %}MUBs Home{% endblock %}
+
 {% block content %}
 {{ super() }}
 <div class="jumbotron">
@@ -10,7 +13,19 @@
     </div>
 </div>
 <div class="container">
-    <h2>{{ title }}</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>{{ title }}</h2>
+        </div>
+        <div class="col-md-6">
+            {{ wtf.quick_form(caform, form_type='horizontal', horizontal_columns=('sm', 4, 8), button_map={'submit': 'danger'}, id='caform') }}
+            <script type="text/javascript">
+             $(document).ready(function() {
+                 $('#caform .form-group').addClass('form-group-sm');
+             });
+            </script>
+        </div>
+    </div>
     <div id="tableTabs" class="container">
         <ul class="nav nav-tabs" id="tableTabsList">
             <li class="active">
