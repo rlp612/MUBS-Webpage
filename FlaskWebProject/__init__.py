@@ -18,7 +18,10 @@ set_sqlalchemy_params(app)
 db.init_app(app)
 db.Model.metadata.reflect(db.engine)
 
-from .models import BuildingEvent
+
+
+from .models import BuildingEvent, CommunityAttributes
+from .forms import CommunityAttributesForm
 
 
 @app.route('/')
@@ -43,7 +46,10 @@ def building(bldng):
     else:
         title = bldng.title()
 
-    voterData = stored_procedure(
+    caform = CommunityAttributesForm(
+        obj=CommunityAttributes.query.get(bldng)
+    )
+
         fdbcred=app.config['F_DBCRED'],
         sp=app.config['SP_VOT'],
         args=(bldng,)
@@ -75,7 +81,8 @@ def building(bldng):
         ambassadorData=json.dumps(ambassadorData),
         eventData=json.dumps(eventData),
         eventtypes=BuildingEvent.eventTypes,
-        noVoterAptData=json.dumps(noVoterAptData)
+        noVoterAptData=json.dumps(noVoterAptData),
+        caform=caform
     )
 
 

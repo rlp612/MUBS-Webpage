@@ -12,3 +12,10 @@ class BuildingEvent(db.Model):
 
     def __repr__(self):
         return '<BuildingEvent (desc: {})>'.format(self.Event_description)
+
+
+class CommunityAttributes(db.Model):
+    __table__ = db.Model.metadata.tables['Community_Attributes']
+
+    def __repr__(self):
+        return '<CommunityAttribute (desc: {})>'.format(self.address)
