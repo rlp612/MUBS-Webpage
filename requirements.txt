@@ -1,5 +1,9 @@
 Flask<1
+Flask-Bootstrap==3.3.7.0
 Flask-SQLAlchemy==2.1
+Flask-WTF==0.12
 PyYAML==3.11
 requests==2.11
 SQLAlchemy==1.0.13
+WTForms==2.1
+WTForms-SQLAlchemy==0.1
