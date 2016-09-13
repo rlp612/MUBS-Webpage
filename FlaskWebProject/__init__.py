@@ -309,5 +309,13 @@ def get_building_events(bldng):
 
 
 app.debug = True
+
+# hacks because eff azure
+import logging
+from logging.handlers import RotatingFileHandler
+handler = RotatingFileHandler('mubs.log', maxBytes=10000, backupCount=1)
+app.logger.addHandler(handler)
+
+
 if __name__ == "__main__":
     app.run()
