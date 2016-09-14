@@ -204,6 +204,25 @@ def delete_event(eventId):
     )
 
 
+@app.route('/update_community_attribute', methods=['POST'])
+def update_community_attribute():
+    caform = CommunityAttributesForm()
+
+    if caform.validate_on_submit():
+        cadict = dict(caform.data)
+        ca = CommunityAttributes.query.get(cadict.pop('address'))
+        for (k, v) in cadict.items():
+            try:
+                setattr(ca, k, v)
+            except:
+                pass
+        print(caform.data['Gated_Access'])
+        print(ca.Gated_Access)
+        db.session.commit()
+
+    return redirect(url_for('building', bldng=request.args['bldng']))
+
+
 def _qry_to_dict(fdbcred, q, qrykwargs={}):
     """wrapper to query and get a list dict"""
     dbcred = load_from_yaml(fdbcred)

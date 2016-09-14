@@ -39,7 +39,7 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="attributetab">
-                {{ wtf.quick_form(caform, form_type='horizontal', horizontal_columns=('md', 2, 10), button_map={'submit': 'danger'}, id='caform') }}
+                {{ wtf.quick_form(caform, action=url_for('.update_community_attribute', bldng=building, _anchor='attributetab'), form_type='horizontal', horizontal_columns=('md', 2, 10), button_map={'submit': 'danger'}, id='caform') }}
             </div>
             <div class="tab-pane" id="votertab">
                 <table id="votertable"
