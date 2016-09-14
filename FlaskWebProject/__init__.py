@@ -52,6 +52,7 @@ def building(bldng):
         obj=CommunityAttributes.query.get(bldng)
     )
 
+    voterData = stored_procedure(
         fdbcred=app.config['F_DBCRED'],
         sp=app.config['SP_VOT'],
         args=(bldng,)
